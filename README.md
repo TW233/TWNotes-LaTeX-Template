@@ -13,7 +13,7 @@ It is a heavy refactor of [amznotes](https://github.com/alexmingzhang/amznotes),
 ## Preview
 
 <div align="center">
-  <img src="./sample-images/sample_1.png.png" alt="Cover Page" width="400" />
+  <img src="./sample-images/sample_1.png" alt="Cover Page" width="400" />
   &nbsp;&nbsp;&nbsp;&nbsp; <img src="./sample-images/sample_3.png" alt="Content Page" width="400" />
 </div>
 
