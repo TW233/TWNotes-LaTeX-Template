@@ -10,8 +10,12 @@
 
 It is a heavy refactor of [amznotes](https://github.com/alexmingzhang/amznotes), updated with a **CVPR/NeurIPS-inspired color palette**, improved typography (Palatino-based), and enhanced code highlighting.
 
-> [!NOTE]  
-> **Preview Images**: *Please replace this line with actual screenshots of your PDF (e.g., Cover Page, Chapter Page, Code Blocks) after you build it.*
+## Preview
+
+<div align="center">
+  <img src="./sample-images/sample_1.png.png" alt="Cover Page" width="400" />
+  &nbsp;&nbsp;&nbsp;&nbsp; <img src="./sample-images/sample_3.png" alt="Content Page" width="400" />
+</div>
 
 ## Key Features
 
