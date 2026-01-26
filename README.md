@@ -7,13 +7,14 @@
 <br/><br/>
 
 [![Version](https://img.shields.io/github/v/release/TW233/TWNotes-LaTeX-Template?color=0C2344&label=Version&style=for-the-badge&logo=github)](https://github.com/TW233/TWNotes-LaTeX-Template/releases)
+[![CJK Support](https://img.shields.io/badge/CJK-Supported-C8553D?style=for-the-badge&logo=google-translate&logoColor=white)](#documentation-chinese)
 [![Engine](https://img.shields.io/badge/engine-XeLaTeX%20%7C%20LuaLaTeX-2B4162?style=for-the-badge&logo=latex&logoColor=white)](https://tug.org/xetex/)
 [![License](https://img.shields.io/badge/License-MIT-005F73?style=for-the-badge)](LICENSE)
 
 
 **A strictly typed, algorithmically generated LaTeX template for researchers.**
 
-[Documentation (English)](#documentation-english) | [中文说明文档](#documentation-chinese)
+[Documentation (English)](#documentation-english) | [中文说明文档 (v1.1.0 Updated)](#documentation-chinese)
 
 </div>
 
@@ -93,7 +94,48 @@ We employ a semantic coloring strategy where every color serves a logical functi
 
 ---
 
-## 4. Usage Guide
+## 4. Typography Architecture & CJK Support (v1.1.0)
+
+Version 1.1.0 introduces the **"Golden Triangle"** typesetting strategy. Designed to transcend the visual monotony of standard system fonts (like *SimSun*), this architecture establishes a publication-grade CJK reading experience aligned with modern typographic standards.
+
+### The Golden Triangle Strategy
+
+| Zone | Typeface | Design Intent |
+| :--- | :--- | :--- |
+| **Body Text** | **Source Han Serif** (思源宋体) | Compared to legacy fonts, its stroke tension and visual weight (gray level) are perfectly balanced with the English Palatino font. |
+| **Headers** | **XiaoBiaoSong** (方正小标宋) | Reserved for `Chapter` and `Section`. Its solemn, rigid structure anchors the page layout, delivering an authoritative "official document" aesthetic. |
+| **UI Elements** | **Source Han Sans** (思源黑体) | Used for Definitions, Theorems, and Code. The modern sans-serif style creates a crisp visual separation from the serif body text, maximizing information retrieval efficiency. |
+
+### Configuration Modes
+
+TWNotes v1.1.0 offers two distinct configuration modes for CJK environments:
+
+#### Mode A: Strict Aesthetics (Recommended, Local Fonts)
+This mode ensures **pixel-perfect, print-ready consistency** across all compilation environments (Windows/macOS/Linux).
+
+1.  Enable flags: `\documentclass[cn, localfonts]{twnotes}`
+2.  Create a `fonts/` directory at the project root and populate it with the following 6 files (**Filenames must match exactly**):
+
+```text
+root/
+└── fonts/
+    ├── SourceHanSerifSC-Regular.otf   # Body Text (Regular)
+    ├── SourceHanSerifSC-Bold.otf      # Body Text (Bold)
+    ├── SourceHanSansSC-Regular.otf    # Code / Sans (Regular)
+    ├── SourceHanSansSC-Bold.otf       # Sans (Bold)
+    ├── SourceHanSansSC-Medium.otf     # Box Headers (Medium Weight)
+    └── xbs.ttf                        # XiaoBiaoSong (Rename FZXBS.TTF to this)
+```
+
+#### Mode B: System Fallback (Portable)
+Ideal for quick prototyping in environments where you cannot install or carry specific font files.
+
+1.  Enable flags: `\documentclass[cn]{twnotes}` (**Do NOT** include `localfonts`)
+2.  The template automatically falls back to OS-default fonts (e.g., Fandol series or System Defaults). While aesthetic precision is slightly reduced, portability is maximized.
+
+---
+
+## 5. Usage Guide (v1.1.0 Updated)
 
 ### Prerequisites
 1.  **TeX Distribution**: TeX Live 2023+ (Recommended) or MacTeX.
@@ -112,7 +154,10 @@ xelatex -shell-escape main.tex
 
 ### Boilerplate Code
 ```latex
-\documentclass[math,code]{twnotes}
+% v1.1.0+ supports Multilingual Options
+% [cn]: Enable Chinese Support
+% [localfonts]: Use local font files instead of system fonts
+\documentclass[math, code, cn, localfonts]{twnotes}
 
 % Meta-data for the Cover Generator
 \title{Deep Learning Notes}
@@ -141,7 +186,7 @@ xelatex -shell-escape main.tex
 
 ---
 
-## 5. Advanced Configuration
+## 6. Advanced Configuration
 
 ### Package Options
 Load the class with specific flags to toggle functionality:
@@ -150,6 +195,8 @@ Load the class with specific flags to toggle functionality:
 | :--- | :--- | :--- |
 | `math` | Enables `thmbox`, `lembox`, and `\laplace` macros. | Low |
 | `code` | Enables `minted` integration. Requires Python. | Medium |
+| `cn` | **(New)** Enables `ctex` and Chinese font configuration. | Low |
+| `localfonts`| **(New)** Forces font loading from `./fonts/` instead of system. | Low |
 | `fastcompile` | **Debug Mode**. Disables the TikZ cover, fancy headers, and chapter decorations. Use this when writing content to speed up compilation 10x. | **High Speed** |
 
 ### Directory Structure
@@ -159,12 +206,12 @@ For larger monographs, we recommend the following modular structure:
 root/
 ├── twnotes.cls          # Core Logic (Do not edit)
 ├── main.tex             # Entry Point
+├── fonts/               # (New) Local font files for 'localfonts' mode
 ├── images/              # Static Assets (PNG/PDF)
 ├── code/                # External scripts for \twinputcode
 └── sections/            # Content Modules
     ├── 01_intro.tex
-    ├── 02_cnn.tex
-    └── 03_transformers.tex
+    └── 02_transformers.tex
 ```
 
 <details>
@@ -246,7 +293,6 @@ root/
 </table>
 
 ### 语义化配色系统
-我们采用“语义化着色”策略，每一种颜色都对应特定的逻辑功能。
 
 | 语义功能 | 色板标识 (Hex) | 使用场景 |
 | :--- | :--- | :--- |
@@ -257,78 +303,126 @@ root/
 | **代码** | ![Charcoal](https://img.shields.io/badge/Charcoal-2D3436?style=flat-square) | 代码片段、终端输出 |
 | **技巧** | ![Burnt Sienna](https://img.shields.io/badge/Burnt_Sienna-C8553D?style=flat-square) | 提示、警告、避坑指南 |
 
-### 字体技术栈
-* **正文**: `newpxtext` (Palatino 变体)。相比于 Computer Modern，它拥有更强的人文主义笔触和更粗的字重，极大提升了屏幕阅读体验。
-* **数学公式**: `newpxmath`. 确保数学符号的字重与衬线风格与正文完美匹配。
-* **等宽字体**: `Inconsolata`. 专为代码可读性优化的人文主义等宽字体。
+---
+
+## 4. v1.1.0 中文支持与字体架构
+
+在 v1.1.0 版本中，我们引入了**"黄金三角"**字体排版策略，旨在打破“宋体走天下”的单调感，构建符合现代出版标准的中文阅读体验。
+
+### 字体混排逻辑 (The Golden Triangle)
+
+| 区域 (Zone) | 字体选型 (Typeface) | 设计意图 (Design Intent) |
+| :--- | :--- | :--- |
+| **正文** | **思源宋体 (Source Han Serif)** | 相比传统中易宋体，思源宋体的笔画更具张力，灰度与英文字体 Palatino 完美平衡。 |
+| **大标题** | **方正小标宋 (XiaoBiaoSong)** | 用于 Chapter/Section。字形庄重、骨架硬朗，能有效撑起版面层级，呈现“公文级”的严肃感。 |
+| **功能框** | **思源黑体 (Source Han Sans)** | 用于定义、定理、代码块。无衬线体的现代感能与正文形成视觉区隔，提升信息检索效率。 |
+
+### 配置说明
+
+TWNotes v1.1.0 提供了两种中文配置模式：
+
+#### 模式 A：极致美观版 (推荐，需配置本地字体)
+此模式能保证在任何电脑上编译出一致的、印刷级的视觉效果。
+
+1.  开启选项：`\documentclass[cn, localfonts]{twnotes}`
+2.  建立 `fonts/` 文件夹，并放入以下 6 个文件（**文件名必须严格一致**）：
+
+```text
+root/
+└── fonts/
+    ├── SourceHanSerifSC-Regular.otf   # 正文常规
+    ├── SourceHanSerifSC-Bold.otf      # 正文粗体
+    ├── SourceHanSansSC-Regular.otf    # 代码/黑体常规
+    ├── SourceHanSansSC-Bold.otf       # 黑体粗体
+    ├── SourceHanSansSC-Medium.otf     # 框体标题 (中等字重)
+    └── xbs.ttf                        # 方正小标宋 (请将 FZXBS.TTF 重命名为此)
+```
+
+#### 模式 B：快速通用版 (无需字体文件)
+适合在未安装特定字体的环境下临时编译。
+
+1.  开启选项：`\documentclass[cn]{twnotes}` (**不要**加 `localfonts`)
+2.  模板将自动回退到操作系统默认字体（如系统自带的思源系列或中易系列），虽然美观度略有下降，但胜在便携。
 
 ---
 
-## 4. 使用指南
+## 5. 使用指南 (v1.1.0 更新)
 
-### 环境要求
+### 环境要求 (Prerequisites)
 1.  **TeX 发行版**: 推荐 TeX Live 2023+ 或 MacTeX。
 2.  **Python 环境**: `minted` 宏包依赖此环境。
     ```bash
     pip install pygments
     ```
 
-### 编译指令
-⚠️ **重要**: 必须使用 `-shell-escape` 参数启动编译器，以允许 LaTeX 调用外部 Python 脚本进行语法高亮。
+### 编译指令 (Compilation)
+⚠️ **关键提示 (CRITICAL)**: 必须使用 `-shell-escape` 参数启动编译器，以允许 LaTeX 调用 Python 进行语法高亮。
 
 ```bash
-# 推荐使用 XeLaTeX 引擎
+# 推荐引擎
 xelatex -shell-escape main.tex
 ```
 
-### 基础模板
+### 基础模板代码 (Boilerplate Code)
 ```latex
-\documentclass[math,code]{twnotes}
+% v1.1.0+ 支持多语言选项
+% [cn]: 开启中文支持
+% [localfonts]: 使用本地字体文件 (而非系统字体)
+\documentclass[math, code, cn, localfonts]{twnotes}
 
 % 封面生成器元数据
-\title{Deep Learning Notes}
-\subtitle{A Comprehensive Guide to Vision Transformers}
-\institution{Institute for Advanced Study}
-\author{Your Name}
+\title{深度学习笔记}
+\subtitle{Vision Transformers 权威指南}
+\institution{高等研究院}
+\author{你的名字}
 \date{\today}
 
 \begin{document}
     \maketitle
     
-    \chapter{Introduction}
+    \chapter{绪论}
     
-    \begin{dfnbox}{Latent Space}{def:latent}
-        A manifold $\mathcal{M}$ embedded in $\mathbb{R}^n$ where...
+    \begin{dfnbox}{潜在空间 (Latent Space)}{def:latent}
+        一个嵌入在 $\mathbb{R}^n$ 中的流形 $\mathcal{M}$，其中...
     \end{dfnbox}
+
+    \begin{codebox}{PyTorch 示例}{code:torch}
+    \begin{twcode}{python}
+    import torch.nn as nn
+    layer = nn.Linear(128, 64)
+    \end{twcode}
+    \end{codebox}
 \end{document}
 ```
 
 ---
 
-## 5. 高级配置与工程化
+## 6. 高级配置 (Advanced Configuration)
 
-### 编译选项 (Options)
+### 宏包选项 (Package Options)
 通过加载文档类时的参数来控制功能模块：
 
 | 选项 | 描述 | 性能影响 |
 | :--- | :--- | :--- |
-| `math` | 启用 `thmbox` (定理), `lembox` (引理) 及数学宏。 | 低 |
+| `math` | 启用 `thmbox`, `lembox` 及 `\laplace` 等数学宏。 | 低 |
 | `code` | 启用 `minted` 代码高亮集成。需要 Python 环境。 | 中 |
-| `fastcompile` | **调试模式**。关闭 TikZ 封面、花式页眉和章节特效。建议在写作内容阶段开启，可提升 10 倍编译速度。 | **极速** |
+| `cn` | **(新)** 启用 `ctex` 及中文字体配置。 | 低 |
+| `localfonts`| **(新)** 强制从 `./fonts/` 目录加载字体，而非使用系统字体。 | 低 |
+| `fastcompile` | **调试模式**。禁用 TikZ 封面、花式页眉及章节装饰。建议在纯写作阶段开启，可提升 10 倍编译速度。 | **极速** |
 
-### 推荐项目结构
+### 目录结构 (Directory Structure)
 对于大型专著，我们推荐以下模块化结构：
 
 ```text
 root/
-├── twnotes.cls          # 核心类文件 (核心逻辑，勿动)
+├── twnotes.cls          # 核心类文件 (核心逻辑，请勿修改)
 ├── main.tex             # 入口文件
-├── images/              # 静态资源目录 (PNG/PDF)
+├── fonts/               # (新) 'localfonts' 模式所需的本地字体文件
+├── images/              # 静态资源 (PNG/PDF)
 ├── code/                # 用于 \twinputcode 引入的外部脚本
-└── sections/            # 内容分块
+└── sections/            # 内容模块
     ├── 01_intro.tex
-    ├── 02_cnn.tex
-    └── 03_transformers.tex
+    └── 02_transformers.tex
 ```
 
 <details>
@@ -340,9 +434,9 @@ root/
 * **原因**: 编译器没有权限运行 Python 脚本。
 * **解决**: 修改编译命令。如果你使用 VS Code (LaTeX Workshop)，请进入 `Settings > Tools > latex-workshop.latex.tools` 并在参数列表中添加 `"-shell-escape"`。
 
-**2. 报错: `Font not found`**
-* **原因**: 你的 TeX 发行版缺少 Palatino 字体包。
-* **解决**: 运行 `tlmgr install newpx` (TeX Live) 或使用 MikTeX Console 安装 `newpxtext` 和 `newpxmath`。
+**2. 报错: `Font "xbs" cannot be found`**
+* **原因**: 开启了 `localfonts` 选项，但 LaTeX 在 `fonts/` 文件夹下找不到 `xbs.ttf`。
+* **解决**: 确保你下载了方正小标宋文件，并将其**重命名**为 `xbs.ttf` (注意后缀全小写)，放入 `fonts` 目录。
 
 **3. 封面消失了？**
 * **原因**: 你可能开启了 `fastcompile` 选项。
@@ -359,4 +453,4 @@ root/
 This project is open-sourced under the MIT License.
 
 * Original concept by [Alex M. Zhang (amznotes)](https://github.com/alexmingzhang/amznotes).
-* Refactored and Redesigned by **TW233**.
+* Refactored, Redesigned and CJK-Enhanced by **TW233**.
