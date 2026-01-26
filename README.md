@@ -6,7 +6,7 @@
 
 <br/><br/>
 
-[![Version](https://img.shields.io/github/v/release/TW233/TWNotes-LaTeX-Template?color=0C2344&label=Version&style=for-the-badge&logo=github)](https://github.com/TW233/TWNotes-LaTeX-Template-releases)
+[![Version](https://img.shields.io/github/v/release/TW233/TWNotes-LaTeX-Template?color=0C2344&label=Version&style=for-the-badge&logo=github)](https://github.com/TW233/TWNotes-LaTeX-Template/releases)
 [![Engine](https://img.shields.io/badge/engine-XeLaTeX%20%7C%20LuaLaTeX-2B4162?style=for-the-badge&logo=latex&logoColor=white)](https://tug.org/xetex/)
 [![License](https://img.shields.io/badge/License-MIT-005F73?style=for-the-badge)](LICENSE)
 
