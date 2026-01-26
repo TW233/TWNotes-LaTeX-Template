@@ -14,8 +14,8 @@ It is a heavy refactor of [amznotes](https://github.com/alexmingzhang/amznotes),
 
 <div align="center">
   
-  <img src="./sample-images/cover.png" width="45%" alt="Cover Design" />
-  &nbsp; &nbsp; <img src="./sample-images/content.png" width="45%" alt="Inner Page Layout" />
+  <img src="./sample-images/sample_1.png" width="45%" alt="Cover Design" />
+  &nbsp; &nbsp; <img src="./sample-images/sample_3.png" width="45%" alt="Inner Page Layout" />
 
   <br /> <p style="color: #666; font-size: 14px;">
     <i>Left: Generative TikZ Cover &nbsp;&nbsp;&bull;&nbsp;&nbsp; Right: Theorems & Code Blocks</i>
