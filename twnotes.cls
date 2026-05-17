@@ -1,7 +1,6 @@
 % ------------------------------------------------------------
 % twnotes - TW Notes Template
 % Based on amznotes by Alex M. Zhang
-% Refactored for CVPR/NeurIPS Aesthetic
 % ------------------------------------------------------------
 
 \ProvidesClass{twnotes}[2026/01/26 twnotes professional edition v1.1.0]
@@ -27,6 +26,11 @@
 % LOAD REQUIRED PACKAGES
 \RequirePackage[margin=1in]{geometry}   % set margins
 \RequirePackage[dvipsnames]{xcolor}     % pretty colors
+\RequirePackage{adjustbox}	% 实现超宽表格居中
+\RequirePackage{graphicx}
+% 子图
+\RequirePackage{caption}
+\RequirePackage{float}
 
 % --- FONT CONFIGURATION ---
 \RequirePackage{iftex}
@@ -137,7 +141,9 @@ BoldFont = Source Han Sans SC Bold
 
 \RequirePackage[T1]{fontenc}
 \RequirePackage{newpxtext} 
-\RequirePackage{newpxmath} 
+% \RequirePackage{newpxmath} 
+\RequirePackage{amssymb}        % <--- 新增这一行，提供 \blacksquare 支持
+\RequirePackage{unicode-math}
 \RequirePackage{hyperref}               % hyperlinks
 \RequirePackage{fancyhdr}               % fancy headers
 \RequirePackage{lastpage}               % "X of Y" footer
@@ -160,6 +166,7 @@ BoldFont = Source Han Sans SC Bold
 
 \iftwnotes@math
 \RequirePackage{mathtools}          % for math macros
+\RequirePackage{nicefrac}
 
 % Resolve conflict between newpxmath and amsthm
 \let\openbox\relax
@@ -181,7 +188,7 @@ BoldFont = Source Han Sans SC Bold
 
 % ------------------------------------------------------------
 
-% COLORS (CVPR/NeurIPS Palette)
+% COLORS
 % 核心主色：Oxford Blue
 \definecolor{twchaptercolor}{RGB}{12, 35, 68}
 
@@ -404,6 +411,7 @@ BoldFont = Source Han Sans SC Bold
 }
 
 \newtwbox{dfnbox}{Definition}{dfn}{twdfnboxcolor}
+\newtwbox{assumpbox}{Assumption}{ass}{twdfnboxcolor}
 \newtwbox{exbox}{Example}{ex}{twexboxcolor}
 \newtwbox{tecbox}{Technique}{tec}{twtecboxcolor}
 \newtcolorbox{genbox}[1]{twdefaultstyle, genboxstyle, title={#1}}
@@ -412,6 +420,7 @@ BoldFont = Source Han Sans SC Bold
 \iftwnotes@math
 \newtwbox{lembox}{Lemma}{lem}{twthmboxcolor}
 \newtwbox{thmbox}{Theorem}{thm}{twthmboxcolor}
+\newtwbox{propbox}{Proposition}{prop}{twthmboxcolor}
 \fi
 
 \iftwnotes@code

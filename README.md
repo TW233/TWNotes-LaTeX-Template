@@ -67,8 +67,9 @@ Unlike traditional templates that use static JPG/PNG images, TWNotes features a 
       The internal layout engine is engineered to maximize <strong>information hierarchy</strong> and <strong>readability</strong> for technical content.
       <br/><br/>
       <ul>
-        <li><strong>Modular Containers:</strong> Content is strictly typed. Theorems (Slate Blue) and Definitions (Deep Teal) are encapsulated in distinct <code>tcolorbox</code> environments, visually separating "derived truths" from "foundational axioms".</li>
-        <li><strong>Harmonized Math:</strong> Unlike standard LaTeX, we use <code>newpxmath</code> to ensure that mathematical operators ($\int, \sum$) match the stroke weight and serif style of the Palatino body text, creating a seamless reading flow.</li>
+        <li><strong>Modular Containers:</strong> Content is strictly typed. Theorems, Propositions (Slate Blue), Assumptions, and Definitions (Deep Teal) are encapsulated in distinct <code>tcolorbox</code> environments, visually separating "derived truths" from "foundational axioms".</li>
+        <li><strong>Modern Math Engine:</strong> Upgraded to <code>unicode-math</code> and <code>amssymb</code>, ensuring robust support for complex mathematical operators ($\int, \sum$) and seamless compatibility with XeTeX systems. Supports compact fractions via <code>nicefrac</code>.</li>
+        <li><strong>Advanced Float Handling:</strong> Deep integration with <code>adjustbox</code>, <code>float</code>, and <code>caption</code> packages allows for absolute positioning of figures (<code>[H]</code>), subfigures, and perfectly centered ultra-wide tables.</li>
         <li><strong>Semantic Spacing:</strong> Vertical rhythm is managed via <code>parskip</code> and strictly defined header margins, eliminating the dense "wall of text" effect common in default academic templates.</li>
       </ul>
     </td>
@@ -81,16 +82,16 @@ We employ a semantic coloring strategy where every color serves a logical functi
 | Semantic Role | Palette Badge (Hex) | Usage Context |
 | :--- | :--- | :--- |
 | **Primary Theme** | ![Oxford Blue](https://img.shields.io/badge/Oxford_Blue-0C2344?style=flat-square) | Chapter Headers, Title Bars, Cover Background |
-| **Definitions** | ![Deep Teal](https://img.shields.io/badge/Deep_Teal-005F73?style=flat-square) | Axioms, Definitions, URL Links |
-| **Theorems** | ![Slate Blue](https://img.shields.io/badge/Slate_Blue-2B4162?style=flat-square) | Theorems, Lemmas, Proofs, Internal Refs |
+| **Definitions** | ![Deep Teal](https://img.shields.io/badge/Deep_Teal-005F73?style=flat-square) | Axioms, Definitions, Assumptions, URL Links |
+| **Theorems** | ![Slate Blue](https://img.shields.io/badge/Slate_Blue-2B4162?style=flat-square) | Theorems, Lemmas, Propositions, Proofs |
 | **Examples** | ![Antique Bronze](https://img.shields.io/badge/Antique_Bronze-A67C00?style=flat-square) | Case Studies, Examples |
 | **Code Blocks** | ![Charcoal](https://img.shields.io/badge/Charcoal-2D3436?style=flat-square) | Code Snippets, Terminal Outputs |
 | **Techniques** | ![Burnt Sienna](https://img.shields.io/badge/Burnt_Sienna-C8553D?style=flat-square) | Tips, Warnings, "Tricks of the Trade" |
 
 ### Typography Stack
 * **Body Text**: `newpxtext` (Palatino clone). Chosen for its humanist stroke variation which offers superior readability over Computer Modern.
-* **Mathematics**: `newpxmath`. Ensures mathematical symbols match the weight and serif style of the body text.
-* **Monospace**: `Inconsolata`. A humanist monospaced font optimized for code legibility.
+* **Mathematics**: `unicode-math` combined with `amssymb`.
+* **Monospace**: `Inconsolata` (or system CJK Sans). Optimized for code legibility.
 
 ---
 
@@ -142,7 +143,8 @@ Ideal for quick prototyping in environments where you cannot install or carry sp
 2.  **Python Environment**: Required for the `minted` package.
     ```bash
     pip install pygments
-    ```
+    
+```
 
 ### Compilation
 ⚠️ **CRITICAL**: You must execute the compiler with `-shell-escape` to allow LaTeX to call the Python syntax highlighter.
@@ -160,8 +162,8 @@ xelatex -shell-escape main.tex
 \documentclass[math, code, cn, localfonts]{twnotes}
 
 % Meta-data for the Cover Generator
-\title{Deep Learning Notes}
-\subtitle{A Comprehensive Guide to Vision Transformers}
+\title{Equivariant Neural Networks}
+\subtitle{Research on Rotation-Equivariant Operators}
 \institution{Institute for Advanced Study}
 \author{Your Name}
 \date{\today}
@@ -171,14 +173,21 @@ xelatex -shell-escape main.tex
     
     \chapter{Introduction}
     
-    \begin{dfnbox}{Latent Space}{def:latent}
-        A manifold $\mathcal{M}$ embedded in $\mathbb{R}^n$ where...
+    \begin{assumpbox}{Group Symmetry}{ass:group}
+        Let $G$ be a compact group acting on a feature space...
+    \end{assumpbox}
+
+    \begin{dfnbox}{Equivariant Operator}{def:equiv}
+        A characteristic field $e$ on a manifold satisfies equivariance if for any transformation $g \in G$, $f(g \cdot e) = g \cdot f(e)$.
     \end{dfnbox}
 
-    \begin{codebox}{PyTorch Example}{code:torch}
+    \begin{codebox}{PyTorch Implementation}{code:torch}
     \begin{twcode}{python}
     import torch.nn as nn
-    layer = nn.Linear(128, 64)
+    from e2cnn import gspaces, nn as e2nn
+    
+    r2_act = gspaces.Rot2dOnR2(N=8)
+    feat_type = e2nn.FieldType(r2_act, [r2_act.regular_repr] * 16)
     \end{twcode}
     \end{codebox}
 \end{document}
@@ -193,7 +202,7 @@ Load the class with specific flags to toggle functionality:
 
 | Option | Description | Performance Impact |
 | :--- | :--- | :--- |
-| `math` | Enables `thmbox`, `lembox`, and `\laplace` macros. | Low |
+| `math` | Enables `thmbox`, `lembox`, `propbox`, and `\laplace` macros. | Low |
 | `code` | Enables `minted` integration. Requires Python. | Medium |
 | `cn` | **(New)** Enables `ctex` and Chinese font configuration. | Low |
 | `localfonts`| **(New)** Forces font loading from `./fonts/` instead of system. | Low |
@@ -211,7 +220,7 @@ root/
 ├── code/                # External scripts for \twinputcode
 └── sections/            # Content Modules
     ├── 01_intro.tex
-    └── 02_transformers.tex
+    └── 02_equivariance.tex
 ```
 
 <details>
@@ -225,7 +234,7 @@ root/
 
 **2. Error: `Font not found`**
 * **Cause**: Your TeX distribution is missing the Palatino fonts.
-* **Fix**: Run `tlmgr install newpx` (TeX Live) or use the MikTeX Console to install `newpxtext` and `newpxmath`.
+* **Fix**: Run `tlmgr install newpx` (TeX Live) or use the MikTeX Console to install `newpxtext`.
 
 **3. Cover Art is missing?**
 * **Cause**: You might have enabled the `fastcompile` option.
@@ -239,7 +248,7 @@ root/
 
 ## <a name="documentation-chinese"></a> 1. 设计哲学 (Design Philosophy)
 
-**TWNotes** 是针对 `amznotes` 系统的一次工程化重构，专为长篇学术写作（如研究专著、讲义、博士论文）量身定制。它弥合了标准 LaTeX 模板的视觉混乱与顶级视觉会议（如 CVPR/ICCV）严格出版标准之间的差距。
+**TWNotes** 是针对 `amznotes` 系统的一次工程化重构，专为长篇学术写作（如研究专著、讲义、博士论文）量身定制。它弥合了标准 LaTeX 模板的视觉混乱与美观严谨出版标准之间的差距。
 
 ### 核心理念
 * **算法美学 (Algorithmic Aesthetics)**：封面并非静态图片，而是完全由代码生成的矢量图形。无论放大多少倍，边缘依然锐利。
@@ -263,6 +272,7 @@ root/
       <br/><br/>
       <ul>
         <li><strong>随机拓扑 (Stochastic Topology)：</strong> 线条与节点网络 (<code>\foreach</code>) 利用随机函数 (<code>rnd</code>) 生成。这意味着你每次编译文档，都会诞生一个数学上独一无二的几何星系。</li>
+        <li><strong>封面主轴微调：</strong> 标题文字的基准 Y 轴进行过视觉重心的微调校准，从而平衡下方的大面积留白。</li>
         <li><strong>Full-Bleed 渲染 (Full-Bleed Rendering)：</strong> 利用 <code>current page</code> 锚点突破页边距限制，创造出沉浸式的无边框视觉体验。</li>
         <li><strong>层叠透明度 (Layered Opacity)：</strong> 通过多重渲染通道叠加不同的 Alpha 通道 (0.08 - 0.15)，在不依赖外部绘图软件的情况下构建出深邃的空间感。</li>
       </ul>
@@ -284,8 +294,9 @@ root/
       内页布局引擎专为技术内容设计，旨在最大化<strong>信息层级</strong>的清晰度与<strong>阅读体验</strong>。
       <br/><br/>
       <ul>
-        <li><strong>模块化容器 (Modular Containers)：</strong> 内容被严格分类。定理（板岩蓝）和定义（深青色）被封装在不同的 <code>tcolorbox</code> 环境中，从视觉上将“推导出的真理”与“基础公理”彻底区分开来。</li>
-        <li><strong>数学调和 (Harmonized Math)：</strong> 与标准 LaTeX 不同，我们使用 <code>newpxmath</code> 确保数学运算符 ($\int, \sum$) 的字重和衬线风格与 Palatino 正文完美匹配，创造流畅的阅读流。</li>
+        <li><strong>模块化容器 (Modular Containers)：</strong> 内容被严格分类。定理、命题（板岩蓝）和定义、假设（深青色）被封装在不同的 <code>tcolorbox</code> 环境中，从视觉上将“推导出的真理”与“基础公理”彻底区分开来。</li>
+        <li><strong>现代化数学引擎：</strong> 弃用了老旧的 <code>newpxmath</code>，全面升级至 <code>unicode-math</code> 体系，配合 <code>amssymb</code> 提供更完善的符号库支持，并新增了 <code>nicefrac</code> 用于排版精致的内联分数。</li>
+        <li><strong>超强图表控制：</strong> 新增 <code>adjustbox</code> 与 <code>float</code> 等核心宏包，完美解决超宽表格居中、子图并排以及强制图形定位 (<code>[H]</code>) 的刚性需求。</li>
         <li><strong>语义化间距 (Semantic Spacing)：</strong> 通过 <code>parskip</code> 和严格定义的标题边距管理垂直节奏，消除了默认学术模板中常见的“文字墙”效应。</li>
       </ul>
     </td>
@@ -297,8 +308,8 @@ root/
 | 语义功能 | 色板标识 (Hex) | 使用场景 |
 | :--- | :--- | :--- |
 | **主视觉** | ![Oxford Blue](https://img.shields.io/badge/Oxford_Blue-0C2344?style=flat-square) | 章节页眉、标题栏、封面背景 |
-| **定义** | ![Deep Teal](https://img.shields.io/badge/Deep_Teal-005F73?style=flat-square) | 公理、定义、URL 超链接 |
-| **定理** | ![Slate Blue](https://img.shields.io/badge/Slate_Blue-2B4162?style=flat-square) | 定理、引理、证明、内部引用 |
+| **定义与假设** | ![Deep Teal](https://img.shields.io/badge/Deep_Teal-005F73?style=flat-square) | 公理、定义 (Definition)、假设 (Assumption)、URL 超链接 |
+| **定理与命题** | ![Slate Blue](https://img.shields.io/badge/Slate_Blue-2B4162?style=flat-square) | 定理 (Theorem)、引理 (Lemma)、命题 (Proposition)、证明 |
 | **示例** | ![Antique Bronze](https://img.shields.io/badge/Antique_Bronze-A67C00?style=flat-square) | 案例分析、具体示例 |
 | **代码** | ![Charcoal](https://img.shields.io/badge/Charcoal-2D3436?style=flat-square) | 代码片段、终端输出 |
 | **技巧** | ![Burnt Sienna](https://img.shields.io/badge/Burnt_Sienna-C8553D?style=flat-square) | 提示、警告、避坑指南 |
@@ -346,14 +357,15 @@ root/
 
 ---
 
-## 5. 使用指南 (v1.1.0 更新)
+## 5. 使用指南 (v1.1.0 Updated)
 
 ### 环境要求 (Prerequisites)
 1.  **TeX 发行版**: 推荐 TeX Live 2023+ 或 MacTeX。
 2.  **Python 环境**: `minted` 宏包依赖此环境。
     ```bash
     pip install pygments
-    ```
+    
+```
 
 ### 编译指令 (Compilation)
 ⚠️ **关键提示 (CRITICAL)**: 必须使用 `-shell-escape` 参数启动编译器，以允许 LaTeX 调用 Python 进行语法高亮。
@@ -371,8 +383,8 @@ xelatex -shell-escape main.tex
 \documentclass[math, code, cn, localfonts]{twnotes}
 
 % 封面生成器元数据
-\title{深度学习笔记}
-\subtitle{Vision Transformers 权威指南}
+\title{旋转等变网络}
+\subtitle{等变上下采样算子的研究与实现}
 \institution{高等研究院}
 \author{你的名字}
 \date{\today}
@@ -382,14 +394,21 @@ xelatex -shell-escape main.tex
     
     \chapter{绪论}
     
-    \begin{dfnbox}{潜在空间 (Latent Space)}{def:latent}
-        一个嵌入在 $\mathbb{R}^n$ 中的流形 $\mathcal{M}$，其中...
+    \begin{assumpbox}{群对称性 (Group Symmetry)}{ass:group}
+        设 $G$ 为作用于特征空间上的紧群...
+    \end{assumpbox}
+
+    \begin{dfnbox}{等变算子 (Equivariant Operator)}{def:equiv}
+        若流形上的特征场 $e$ 满足等变性，则对于任意变换 $g \in G$，有 $f(g \cdot e) = g \cdot f(e)$。
     \end{dfnbox}
 
-    \begin{codebox}{PyTorch 示例}{code:torch}
+    \begin{codebox}{基于 e2cnn 的实现示例}{code:e2cnn}
     \begin{twcode}{python}
     import torch.nn as nn
-    layer = nn.Linear(128, 64)
+    from e2cnn import gspaces, nn as e2nn
+    
+    r2_act = gspaces.Rot2dOnR2(N=8)
+    feat_type = e2nn.FieldType(r2_act, [r2_act.regular_repr] * 16)
     \end{twcode}
     \end{codebox}
 \end{document}
@@ -404,7 +423,7 @@ xelatex -shell-escape main.tex
 
 | 选项 | 描述 | 性能影响 |
 | :--- | :--- | :--- |
-| `math` | 启用 `thmbox`, `lembox` 及 `\laplace` 等数学宏。 | 低 |
+| `math` | 启用 `thmbox`, `lembox`, `propbox`, `assumpbox` 及 `\laplace` 等数学宏。 | 低 |
 | `code` | 启用 `minted` 代码高亮集成。需要 Python 环境。 | 中 |
 | `cn` | **(新)** 启用 `ctex` 及中文字体配置。 | 低 |
 | `localfonts`| **(新)** 强制从 `./fonts/` 目录加载字体，而非使用系统字体。 | 低 |
@@ -422,7 +441,7 @@ root/
 ├── code/                # 用于 \twinputcode 引入的外部脚本
 └── sections/            # 内容模块
     ├── 01_intro.tex
-    └── 02_transformers.tex
+    └── 02_equivariance.tex
 ```
 
 <details>
